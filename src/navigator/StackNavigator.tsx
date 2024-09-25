@@ -6,44 +6,47 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../config/firebaseConfig";
 import { View } from "react-native";
-import { ActivityIndicator, MD2Colors } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import { styles } from "../theme/style";
 
-//interface - rutas
+// Interface - rutas
 interface Routes {
   name: string;
-  screen: () => JSX.Element; //Componente React
+  screen: () => JSX.Element; // Componente React
 }
 
-//Arreglos - rutas cuando el usuario no este autenticado
+// Arreglos - rutas cuando el usuario no este autenticado
 const routesNoAuth: Routes[] = [
   { name: "Login", screen: LoginScreen },
   { name: "Register", screen: RegisterScreen },
 ];
 
-//Arreglos - rutas cuando el usuario  este autenticado
+// Arreglos - rutas cuando el usuario este autenticado
 const routesAuth: Routes[] = [{ name: "Home", screen: HomeScreen }];
 
 const Stack = createStackNavigator();
 
 export const StackNavigator = () => {
-  //hook useState: Verificar si esta autenticado o no
+  // hook useState: Verificar si está autenticado o no
   const [isAuth, setIsAuth] = useState<boolean>(false);
 
-  //hook useState : controlar carga inicial
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // hook useState : Controlar carga inicial
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Inicialmente cargando
 
-  //hook useEffect: Validar el estado de la autenticacion
+  // hook useEffect: Validar el estado de la autenticación
   useEffect(() => {
-    //cargar el activity indicator
-    setIsLoading(true);
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setIsAuth(true);
+        setIsAuth(true);  // Usuario autenticado
+      } else {
+        setIsAuth(false); // Usuario no autenticado
       }
-      //Ocultar es activity indicator
+      // Ocultar el activity indicator después de verificar
       setIsLoading(false);
     });
+
+    // Limpiar el listener cuando el componente se desmonta
+    return () => unsubscribe();
   }, []);
 
   return (
