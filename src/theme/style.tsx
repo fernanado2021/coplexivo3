@@ -7,73 +7,169 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 20,
     paddingHorizontal: 30,
-    backgroundColor: "#f4f6f9",          // Fondo más claro y suave
+    backgroundColor: "#f4f6f9", // Lighter, softer background
   },
   text: {
     fontSize: 26,
-    fontWeight: '800',                   // Peso de fuente un poco más liviano para mayor legibilidad
+    fontWeight: "800", // Slightly lighter font weight for better readability
     textAlign: "center",
-    fontFamily: 'Roboto',
-    color: "#2a2a2a",                    // Color gris más oscuro para un mejor contraste
+    fontFamily: "Roboto",
+    color: "#2a2a2a", // Darker gray for better contrast
     marginBottom: 20,
-    letterSpacing: 1.2,                  // Espaciado entre letras para una lectura más moderna
+    letterSpacing: 1.2, // Letter spacing for modern reading
   },
   input: {
     width: "100%",
-    marginVertical: 9,
     backgroundColor: "#ffffff",
-    borderRadius: 14,                    // Bordes más redondeados
-    borderWidth: 1,
-    borderColor: "#dde1e7",              // Bordes gris claro más suaves
+    borderRadius: 14, // Consistent rounded corners
     paddingHorizontal: 15,
-    elevation: 3,                        // Sombra sutil en Android
-    shadowColor: "#000",                 // Sombra en iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
   },
   button: {
-    backgroundColor: "#4f63d2",          // Color azul elegante
+    backgroundColor: "#4f63d2", // Elegant blue
+    width: "100%",
+    borderRadius: 14, // Consistent rounded corners
+    marginVertical: 9,
+    alignItems: "center",
+  },
+  buttonSignOut: {
+    backgroundColor: "#FF0000", // Elegant red for sign out
+    width: "50%",
+    borderRadius: 14,
+    alignItems: "center",
+  },
+  buttonEditProfile: {
+    backgroundColor: "#4f63d2", // Elegant blue for edit profile
     width: "100%",
     borderRadius: 14,
     marginVertical: 9,
     alignItems: "center",
-    shadowColor: "#000",                 // Sombra suave para el botón
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
   },
   buttonText: {
-    color: "#ffffff",                    // Texto blanco para un contraste fuerte
-    fontSize: 18,                        // Fuente más grande para mejor legibilidad
-    fontWeight: '600',
+    color: "#ffffff", // White text for strong contrast
+    fontSize: 18, // Larger font for better readability
+    fontWeight: "600",
   },
-  snackbar:{
+  snackbar: {
     width: "100%",
   },
-  textRedirect:{
+  snackbarForm: {
+    width: "96.5%",
+  },
+  textRedirect: {
     marginTop: 10,
-    fontWeight: '600',                   // Peso medio para el texto de redirección
-    color: "#4f63d2",                    // Azul moderno para la redirección
+    fontWeight: "600", // Medium weight for redirect text
+    color: "#4f63d2", // Modern blue for redirection
     textDecorationLine: "underline",
   },
-  rootActivity:{
+  rootActivity: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: "#f4f6f9",          // Fondo suave también en esta pantalla
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f4f6f9", // Soft background for activity
   },
-  rootHome:{
+  headerSignOut: {
+    width: "100%",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+  rootHome: {
     flex: 1,
     marginHorizontal: 25,
     marginVertical: 50,
-    alignItems: 'center',
   },
-  headerHome:{
-    flexDirection: 'row',
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  icon: {
+    alignItems: "flex-end",
+    flex: 1,
+  },
+  modal: {
+    margin: 15,
+    padding: 15,
+    paddingHorizontal: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    gap: 10,
+  },
+  rootBook: {
+    marginTop: 10,
+  },
+  rootListBook: {
+    flexDirection: "row",
+    padding: 10,
+    alignItems: "flex-start",
     gap: 15,
-    alignItems: 'center',
-    paddingVertical: 10,                 // Añadir espacio vertical al encabezado
+  },
+  bookCard: {
+    flex: 1,
+    backgroundColor: "#000",
+    borderRadius: 10,
+    marginVertical: 5,
+    padding: 15,
+  },
+  bookTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#4f63d2",
+  },
+  bookAuthor: {
+    fontSize: 16,
+    color: "#2a2a2a",
+    marginVertical: 2,
+  },
+  bookInfo: {
+    fontSize: 14,
+    color: "#666",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  welcomeText: {
+    flex: 1,
+    marginLeft:10
+  },
+  userName: {
+    fontWeight: "500",
+    color: "#2a2a2a",
+  },
+  editIcon: {
+    marginLeft: 10,
+  },
+  bookListTitle: {
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#4f63d2",
+    marginVertical: 15,
+  },
+  fabBook: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    backgroundColor:'#109048',
+  },
+  rootIputBook:{
+    flexDirection:'row'
+  },
+  inputBook:{
+    width: "100%",
+    backgroundColor: "#ffffff",
+    borderRadius: 14, // Consistent rounded corners
+    paddingHorizontal: 15,
+    flex: 1, 
+    marginRight: 5
+  },
+  buttonNewBook: {
+    backgroundColor: "#4f63d2", // Elegant blue for edit profile
+    width: "100%",
+    borderRadius: 14,
+    marginVertical: 9,
+    alignItems: "center",
   },
 });
