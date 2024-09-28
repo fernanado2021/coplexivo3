@@ -10,13 +10,10 @@ export const styles = StyleSheet.create({
     backgroundColor: "#f4f6f9", // Lighter, softer background
   },
   text: {
-    fontSize: 26,
-    fontWeight: "800", // Slightly lighter font weight for better readability
+    fontSize: 25,
+    fontWeight: "300", // Slightly lighter font weight for better readability
     textAlign: "center",
-    fontFamily: "Roboto",
-    color: "#2a2a2a", // Darker gray for better contrast
-    marginBottom: 20,
-    letterSpacing: 1.2, // Letter spacing for modern reading
+    // color: "#FF0000", // Darker gray for better contrast
   },
   input: {
     width: "100%",
@@ -171,5 +168,26 @@ export const styles = StyleSheet.create({
     borderRadius: 14,
     marginVertical: 9,
     alignItems: "center",
+  },
+  rootDetail:{
+    flex:1,
+    padding:20,
+    backgroundColor: "#f4f6f9", // Lighter, softer background
+    gap:20
+  },
+  inputContainer: {
+    flex: 1,               // Cada contenedor ocupa el espacio disponible
+    marginHorizontal: 5,   // Espacio entre los contenedores
+  },
+  buttonContainer: {
+    flexDirection: 'row',  // Alinea los botones en fila
+    justifyContent: 'space-between', // Espacio entre los botones
+    marginVertical: 10,
+  },
+  buttonEditBook: {
+    width: "50%",
+    borderRadius: 14,
+    alignItems: "center",
+    marginLeft: 5
   },
 });

@@ -8,11 +8,14 @@ import { auth } from "../config/firebaseConfig";
 import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { styles } from "../theme/style";
+import { DetailBookScreen } from "../screen/HomeScreen/DetailBookScreen";
 
 // Interface - rutas
 interface Routes {
   name: string;
   screen: () => JSX.Element; // Componente React
+  headerShow?: boolean; // propiedad opcional 
+  title?: string ; // propiedad opcional 
 }
 
 // Arreglos - rutas cuando el usuario no este autenticado
@@ -22,7 +25,10 @@ const routesNoAuth: Routes[] = [
 ];
 
 // Arreglos - rutas cuando el usuario este autenticado
-const routesAuth: Routes[] = [{ name: "Home", screen: HomeScreen }];
+const routesAuth: Routes[] = [
+  { name: "Home", screen: HomeScreen },
+  { name: "Detail", screen: DetailBookScreen, headerShow:true , title:"Detalle del Libro"}
+];
 
 const Stack = createStackNavigator();
 
@@ -70,7 +76,10 @@ export const StackNavigator = () => {
                 <Stack.Screen
                   key={index}
                   name={item.name}
-                  options={{ headerShown: false }}
+                  options={{
+                    headerShown: item.name === "Detail" ? true : false, // Solo muestra el header en "Detail"
+                    title: item.name === "Detail" ? item.title : undefined, // Solo muestra el título en "Detail"
+                  }}
                   component={item.screen}
                 />
               ))}

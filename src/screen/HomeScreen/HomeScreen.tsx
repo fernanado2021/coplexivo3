@@ -8,16 +8,18 @@ import {
   IconButton,
   Modal,
   Portal,
+  Snackbar,
   Text,
   TextInput,
 } from "react-native-paper";
 import { styles } from "../../theme/style";
 import { signOut, updateProfile } from "firebase/auth";
-import { auth } from "../../config/firebaseConfig";
+import { auth, dbRealTime } from "../../config/firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import firebase from "@firebase/auth";
 import { BookCardComponent } from "./components/BookCardComponent";
 import { NewBookComponent } from "./components/NewBookComponent";
+import { onValue, ref } from "firebase/database";
 
 // Interface - FormUser
 interface FormUser {
@@ -25,7 +27,7 @@ interface FormUser {
 }
 
 // Interface - Book
-interface Book {
+export interface Book {
   id: string;
   nombre: string;
   autor: string;
@@ -34,31 +36,28 @@ interface Book {
   precio: number;
 }
 
+//interface - mensajes
+interface ShowMessage {
+  visible: boolean;
+  message: string;
+  color: string;
+}
 
 export const HomeScreen = () => {
+
+   //hook usestate: cambiar estado del mensaje
+   const [showMessage, setShowMessage] = useState<ShowMessage>({
+    visible: false,
+    message: "",
+    color: "#fff",
+  });
+
 
   const navigation = useNavigation();
 
   const [formUser, setFormUser] = useState<FormUser>({ name: "" });
   const [userData, setUserData] = useState<firebase.User | null>(null);
-  const [book, setBook] = useState<Book[]>([
-    {
-      id: "1",
-      nombre: "100 Años de Soledad",
-      autor: "Gabriel García Márquez",
-      editorial: "FYM Editorial",
-      n_hojas: 150,
-      precio: 25.3,
-    },
-    {
-      id: "2",
-      nombre: "Crimen y castigo",
-      autor: "Fedor Dostoievski",
-      editorial: "Carvical Editorial",
-      n_hojas: 200,
-      precio: 40,
-    },
-  ]);
+  const [book, setBook] = useState<Book[]>([]);
 
   //hook useState : permite que el modal de usuario se visualice o no
   const [showModalProfile, setShowModalProfile] = useState<boolean>(false);
@@ -68,6 +67,8 @@ export const HomeScreen = () => {
   useEffect(() => {
     setUserData(auth.currentUser);
     setFormUser({ name: auth.currentUser?.displayName ?? "" });
+    //llamar la funcion par ala lista de libros
+    getAllBook();
   }, []);
 
   const handleSignOut = () => {
@@ -90,11 +91,38 @@ export const HomeScreen = () => {
       await updateProfile(userData!, {
         displayName: formUser.name,
       });
+      setShowMessage({
+        visible: true,
+        message: "Usuario Actualizado Correctamente",
+        color: "#109048",
+      });
     } catch (e) {
       console.log(e);
     }
     setShowModalProfile(false);
   };
+  
+  //Funcion : para poder ibtener los productos para listarlos
+  const getAllBook = () => {
+    //1. direccionar a la db
+    const dbRef = ref(dbRealTime, "books");
+    //2. Accededr a la data
+    onValue(dbRef, (snapshot) =>{
+      //3. Capturar la dat
+      const data = snapshot.val(); //Obtener la data en un formato esperado
+      //4. Obtener las keys de cada dato
+      const getKeys = Object.keys(data);
+      //5. Crear un arreglo para amacenar cada libro de la bd
+      const listBook: Book[] = [];
+      //6. Recorre las key para acceder a cada libro
+      getKeys.forEach((key) =>{
+        const value={...data[key], id:key}
+        listBook.push(value);
+      });
+      //7. Actualizar la data obytenida en el areglo del hook
+      setBook(listBook);
+    })
+  }
 
   return (
     <>
@@ -136,7 +164,7 @@ export const HomeScreen = () => {
           </Text>
           <FlatList
             data={book}
-            renderItem={({ item }) => <BookCardComponent />}
+            renderItem={({ item }) => <BookCardComponent book={item} />}
             keyExtractor={(item) => item.id}
           />
         </View>
@@ -187,6 +215,13 @@ export const HomeScreen = () => {
         showModalNewBook={showModalNewBook}
         setShowModalNewBook={setShowModalNewBook}
       ></NewBookComponent>
+      <Snackbar
+        visible={showMessage.visible}
+        onDismiss={() => setShowMessage({ ...showMessage, visible: false })}
+        style={{ ...styles.snackbarForm, backgroundColor: showMessage.color }}
+      >
+        {showMessage.message}
+      </Snackbar>
     </>
   );
 };
