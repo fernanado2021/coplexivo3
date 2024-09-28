@@ -19,16 +19,18 @@ interface Routes {
 }
 
 // Arreglos - rutas cuando el usuario no este autenticado
-const routesNoAuth: Routes[] = [
+const routes: Routes[] = [
   { name: "Login", screen: LoginScreen },
   { name: "Register", screen: RegisterScreen },
-];
-
-// Arreglos - rutas cuando el usuario este autenticado
-const routesAuth: Routes[] = [
   { name: "Home", screen: HomeScreen },
   { name: "Detail", screen: DetailBookScreen, headerShow:true , title:"Detalle del Libro"}
 ];
+
+// Arreglos - rutas cuando el usuario este autenticado
+// const routesAuth: Routes[] = [
+//   { name: "Home", screen: HomeScreen },
+//   { name: "Detail", screen: DetailBookScreen, headerShow:true , title:"Detalle del Libro"}
+// ];
 
 const Stack = createStackNavigator();
 
@@ -62,17 +64,8 @@ export const StackNavigator = () => {
           <ActivityIndicator animating={true} size={30} />
         </View>
       ) : (
-        <Stack.Navigator>
-          {!isAuth
-            ? routesNoAuth.map((item, index) => (
-                <Stack.Screen
-                  key={index}
-                  name={item.name}
-                  options={{ headerShown: false }}
-                  component={item.screen}
-                />
-              ))
-            : routesAuth.map((item, index) => (
+        <Stack.Navigator initialRouteName={isAuth ? 'Home' : 'Login'}>
+          {routes.map((item, index) => (
                 <Stack.Screen
                   key={index}
                   name={item.name}

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Button, Divider, Snackbar, Text, TextInput } from "react-native-paper";
 import { styles } from "../../theme/style";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Book } from "./HomeScreen";
-import { ref, update } from "firebase/database";
-import { dbRealTime } from "../../config/firebaseConfig";
+import { ref, remove, update } from "firebase/database";
+import { auth, dbRealTime } from "../../config/firebaseConfig";
 
 //interface - mensajes
 interface ShowMessage {
@@ -53,7 +53,7 @@ export const DetailBookScreen = () => {
   const handleUpdateBook = async () => {
     // console.log(formEdit);
     //1. direccionar a la tabl y al elemento a editar en la db
-    const dbRef = ref(dbRealTime, "books/" + formEdit.id);
+    const dbRef = ref(dbRealTime, 'books/' +auth.currentUser?.uid +'/'+ formEdit.id);
     //2. Actualizar el dato seleccionado
     try {
       await update(dbRef, {
@@ -68,10 +68,10 @@ export const DetailBookScreen = () => {
         message: "Libro Actualizado Correctamente",
         color: "#109048",
       });
-      //3. Regresar al anterior screen
       setTimeout(() => {
+        //este fue el error
         navigation.goBack();
-      }, 2000); // 2000 ms = 2 segundos
+      }, 2000);
     } catch (e) {
       console.log(e);
       setShowMessage({
@@ -81,9 +81,37 @@ export const DetailBookScreen = () => {
       });
     }
   };
+
+  // Función: eliminar el libro
+  const handleDeleteBook = async () => {
+    const dbRef = ref(dbRealTime, 'books/'+auth.currentUser?.uid + '/'+formEdit.id);
+    try {
+      await remove(dbRef); // Eliminar el libro de la base de datos
+      setShowMessage({
+        visible: true,
+        message: "Libro Eliminado Correctamente",
+        color: "#109048",
+      });
+
+      // Redirigir después de un pequeño retraso
+      setTimeout(() => {
+        navigation.goBack(); // Volver a la pantalla anterior (Home)
+      }, 2000);
+    } catch (e) {
+      console.log(e);
+      setShowMessage({
+        visible: true,
+        message: "No se pudo Eliminar el Libro",
+        color: "#FF0000",
+      });
+    }
+  };
   return (
     <>
       <View style={styles.rootDetail}>
+        <Text style={styles.bookListTitle} variant="bodyLarge">
+          Detalles del Libro
+        </Text>
         <View>
           <Text variant="bodyLarge">Nombre:</Text>
           <TextInput
@@ -148,7 +176,7 @@ export const DetailBookScreen = () => {
           <Button
             icon="delete"
             mode="contained"
-            onPress={() => "eliminar"}
+            onPress={handleDeleteBook} // Llamar a la función de eliminar
             style={[styles.buttonEditBook, { backgroundColor: "#FF0000" }]}
           >
             Eliminar Libro

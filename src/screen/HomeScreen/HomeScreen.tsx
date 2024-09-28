@@ -15,7 +15,7 @@ import {
 import { styles } from "../../theme/style";
 import { signOut, updateProfile } from "firebase/auth";
 import { auth, dbRealTime } from "../../config/firebaseConfig";
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import firebase from "@firebase/auth";
 import { BookCardComponent } from "./components/BookCardComponent";
 import { NewBookComponent } from "./components/NewBookComponent";
@@ -52,7 +52,6 @@ export const HomeScreen = () => {
     color: "#fff",
   });
 
-
   const navigation = useNavigation();
 
   const [formUser, setFormUser] = useState<FormUser>({ name: "" });
@@ -71,15 +70,15 @@ export const HomeScreen = () => {
     getAllBook();
   }, []);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        console.log("Cierre de sesión exitoso");
-        navigation.navigate("Login" as never);
-      })
-      .catch((error) => {
-        console.error("Error al cerrar sesión:", error);
-      });
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      navigation.dispatch(CommonActions.reset({index:0, routes:[{name:'Login'}]}))
+      setShowModalProfile(false)
+    } catch (e) {
+      console.log(e);
+      
+    }
   };
 
   const handleSetValues = (key: string, value: string) => {
@@ -105,11 +104,13 @@ export const HomeScreen = () => {
   //Funcion : para poder ibtener los productos para listarlos
   const getAllBook = () => {
     //1. direccionar a la db
-    const dbRef = ref(dbRealTime, "books");
+    const dbRef = ref(dbRealTime, 'books/'+auth.currentUser?.uid);
     //2. Accededr a la data
     onValue(dbRef, (snapshot) =>{
       //3. Capturar la dat
       const data = snapshot.val(); //Obtener la data en un formato esperado
+      //VERIFICAR Q EXISTE DATA
+      if (!data) return;
       //4. Obtener las keys de cada dato
       const getKeys = Object.keys(data);
       //5. Crear un arreglo para amacenar cada libro de la bd
@@ -126,17 +127,7 @@ export const HomeScreen = () => {
 
   return (
     <>
-      <View style={styles.rootHome}>
-        <View style={styles.headerSignOut}>
-          <Button
-            icon="logout"
-            mode="contained"
-            onPress={handleSignOut}
-            style={styles.buttonSignOut}
-          >
-            Cerrar Sesión
-          </Button>
-        </View>
+      <View style={styles.rootHome}> 
         <View style={styles.header}>
           <Avatar.Icon
             size={50}
@@ -194,14 +185,24 @@ export const HomeScreen = () => {
             value={userData?.email!}
             style={styles.input}
           />
+          <View style={styles.buttonContainer}>
           <Button
             icon="book-edit"
             mode="contained"
             onPress={handleUpdateUser}
-            style={styles.buttonEditProfile}
+            style={[styles.buttonProfile, { backgroundColor: "#4f63d2" }]}
           >
-            Actualizar
+            Actualizar Perfil
           </Button>
+          <Button
+            icon="logout"
+            mode="contained"
+            onPress={handleSignOut} 
+            style={[styles.buttonProfile, { backgroundColor: "#FF0000" }]}
+          >
+            Cerrar Sesion
+          </Button>
+        </View>
         </Modal>
       </Portal>
       <FAB

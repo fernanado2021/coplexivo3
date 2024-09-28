@@ -60,6 +60,7 @@ export const LoginScreen = () => {
         formLogin.email,
         formLogin.password
       );
+      navigation.dispatch(CommonActions.navigate({name:'Home'}))
     } catch (e) {
       setShowMessage({
         visible: true,

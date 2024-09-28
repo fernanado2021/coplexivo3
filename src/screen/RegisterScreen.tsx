@@ -46,6 +46,7 @@ export const RegisterScreen = () => {
 
   //Funcion:registar usuarios
   const handleRegister = async () => {
+    // Verificar que todos los campos estén llenos
     if (!formRegister.email || !formRegister.password) {
       setShowMessage({
         visible: true,
@@ -54,6 +55,7 @@ export const RegisterScreen = () => {
       });
       return;
     }
+  
     console.log(formRegister);
     try {
       const response = await createUserWithEmailAndPassword(
@@ -61,16 +63,30 @@ export const RegisterScreen = () => {
         formRegister.email,
         formRegister.password
       );
+  
+      // Mostrar mensaje de éxito
       setShowMessage({
         visible: true,
-        message: "Usuario creado con exito",
+        message: "Usuario creado con éxito",
         color: "#008000",
       });
+  
+      // Limpiar los campos del formulario
+      setformRegister({
+        email: "",
+        password: "",
+      });
+  
+      // Redirigir al login después de un pequeño retraso (opcional)
+      setTimeout(() => {
+        navigation.goBack(); // Asegúrate de que 'Login' es el nombre correcto de tu ruta
+      }, 2000);
+  
     } catch (e) {
       console.log(e);
       setShowMessage({
         visible: true,
-        message: "Error al crear usuario intente mas tarde",
+        message: "Error al crear usuario, intente más tarde",
         color: "#FF0000",
       });
     }

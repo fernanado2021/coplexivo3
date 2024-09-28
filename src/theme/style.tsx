@@ -190,4 +190,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: 5
   },
+  buttonProfile: {
+    width: "48%",
+    borderRadius: 14,
+    alignItems: "center",
+    marginLeft: 1.5
+  },
 });

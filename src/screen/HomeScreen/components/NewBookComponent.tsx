@@ -12,7 +12,7 @@ import {
 import { styles } from "../../../theme/style";
 import { View } from "react-native";
 import { push, ref, set } from "firebase/database";
-import { dbRealTime } from "../../../config/firebaseConfig";
+import { auth, dbRealTime } from "../../../config/firebaseConfig";
 
 //Interface - Props (propiedades)
 interface Props {
@@ -79,7 +79,7 @@ export const NewBookComponent = ({
     }
 
     //1. crear o redireccionar a la tabla de la bd
-    const dbRef = ref(dbRealTime, "books");
+    const dbRef = ref(dbRealTime, 'books/'+auth.currentUser?.uid);
     //2. Crear una coleccion que agrege los datoos en la dbRef
     const saveBook = push(dbRef);
     //3. Almacenar los datos en la bd
